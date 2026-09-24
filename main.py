@@ -1,51 +1,91 @@
-def juego_ingeniero():
-    print("=== SIMULADOR: UN DIA EN LA VIDA DEL INGENIERO DE SISTEMAS ===")
-    print("Es martes, 4:00 PM. Tu jefe te pide limpiar registros antiguos de la base de datos principal.")
-    print("El sistema esta lento y la direccion presiona para resolverlo antes de salir.\n")
+import tkinter as tk
+import winsound
+import threading
+import time
 
-    print("Opcion 1: Ejecutar la limpieza directo en produccion para terminar rapido.")
-    print("Opcion 2: Generar un respaldo completo antes de tocar cualquier tabla.")
+class YouAreAnIdiotApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Sistema Universitario - Asignación de Notas")
+        self.root.geometry("480x320")
+        self.root.configure(bg="#f0f0f0")
+        self.root.resizable(False, False)
 
-    eleccion1 = input("\n¿Que decides hacer? (Escribe 1 o 2): ").strip()
+        # Pantalla inicial "trampa"
+        self.lbl = tk.Label(
+            root,
+            text="SISTEMA DE ASIGNACIÓN AUTOMÁTICA",
+            font=("Arial", 12, "bold"),
+            bg="#f0f0f0",
+            fg="#333333"
+        )
+        self.lbl.pack(pady=40)
 
-    if eleccion1 == "1":
-        print("\nEjecutas el comando de borrado de registros...")
-        print("¡ERROR GRAVE! Por las prisas olvidaste la clausula WHERE en la consulta SQL.")
-        print("Acabas de borrar toda la base de datos de clientes y transacciones.\n")
+        self.btn = tk.Button(
+            root,
+            text="OBTENER NOTA 20 AQUÍ SOBRINO :)",
+            font=("Arial", 11, "bold"),
+            bg="#008CBA",
+            fg="white",
+            padx=15,
+            pady=10,
+            cursor="hand2",
+            command=self.lanzar_meme
+        )
+        self.btn.pack(pady=10)
 
-        print("Opcion A: Informar de inmediato a tu jefe y al equipo de infraestructura.")
-        print("Opcion B: Intentar disimular y restaurar datos inventados antes de que se den cuenta.")
+    def sonar_melodia(self):
+        # Ritmo de la melodía "You are an idiot! Ha ha ha ha ha ha ha!"
+        melodia = [
+            (659, 200), (659, 200), (659, 200), (523, 200), (659, 200), (784, 400), (392, 400),
+            (523, 150), (587, 150), (659, 150), (698, 150), (784, 150), (880, 300)
+        ]
+        for _ in range(4):  # Repite la secuencia
+            for freq, dur in melodia:
+                try:
+                    winsound.Beep(freq, dur)
+                except:
+                    pass
 
-        eleccion2 = input("\n¿Cual es tu respuesta ante la crisis? (Escribe A o B): ").strip().upper()
+    def parpadear_blanco_negro(self, popup, lbl_top, lbl_main, lbl_bot):
+        # Efecto estroboscópico clásico (Blanco / Negro)
+        for i in range(40):
+            if not popup.winfo_exists():
+                break
+            if i % 2 == 0:
+                bg_color, fg_color = "black", "white"
+            else:
+                bg_color, fg_color = "white", "black"
 
-        if eleccion2 == "A":
-            print("\nTu jefe entra en panico. Aunque fuiste honesto, la perdida monetaria es millonaria.")
-            print("RESULTADO: Te entregan la carta de despido inmediato y Seguridad te acompaña a la salida.")
-        elif eleccion2 == "B":
-            print("\nUn cliente intenta ingresar, todo colapsa y descubren tu intento de ocultarlo.")
-            print("RESULTADO: Despedido por negligencia grave y la empresa evalua tomar acciones legales.")
-        else:
-            print("\nQuedaste en shock. El director de TI descubre el fallo y te despiden en el acto.")
+            popup.configure(bg=bg_color)
+            lbl_top.configure(bg=bg_color, fg=fg_color)
+            lbl_main.configure(bg=bg_color, fg=fg_color)
+            lbl_bot.configure(bg=bg_color, fg=fg_color)
+            time.sleep(0.12)
 
-    elif eleccion1 == "2":
-        print("\nGeneras el respaldo correctamente. Durante la limpieza, un script pide permisos de acceso.")
+    def lanzar_meme(self):
+        # Iniciar melodía en segundo plano
+        threading.Thread(target=self.sonar_melodia, daemon=True).start()
 
-        print("Opcion A: Darle permisos totales de administrador (GRANT ALL) para no perder tiempo.")
-        print("Opcion B: Configurar unicamente los permisos minimos requeridos para esa tarea.")
+        # Ventana estilo estético idéntico a la referencia
+        popup = tk.Toplevel(self.root)
+        popup.title("you are an idiot!")
+        popup.geometry("450x300")
+        popup.resizable(False, False)
 
-        eleccion2 = input("\n¿Que solucion aplicas? (Escribe A o B): ").strip().upper()
+        lbl_top = tk.Label(popup, text="☺  ☺  ☺", font=("Arial", 28), bg="black", fg="white")
+        lbl_top.pack(pady=10)
 
-        if eleccion2 == "A":
-            print("\nLa limpieza termina, pero dejaste una vulnerabilidad critica de seguridad.")
-            print("En la madrugada, un ciberataque vulnera esa cuenta y filtran los datos de la empresa.")
-            print("RESULTADO: Despedido al dia siguiente tras la auditoria de seguridad.")
-        elif eleccion2 == "B":
-            print("\nEl proceso se ejecuta de forma segura. El rendimiento de la base de datos mejora un 40%.")
-            print("RESULTADO: Tu jefe felicita tu prudencia y profesionalismo. Mantienes tu trabajo.")
-        else:
-            print("\nNo elegiste una solucion a tiempo. El proceso colgo el servidor y fuiste sancionado.")
-    else:
-        print("\nOpcion invalida. No tomaste ninguna decision y el tiempo expiró.")
+        lbl_main = tk.Label(popup, text="you are an idI0t!", font=("Times New Roman", 26, "bold"), bg="black", fg="white")
+        lbl_main.pack(expand=True)
+
+        lbl_bot = tk.Label(popup, text="☺  ☺  ☺", font=("Arial", 28), bg="black", fg="white")
+        lbl_bot.pack(pady=10)
+
+        # Iniciar el parpadeo
+        threading.Thread(target=self.parpadear_blanco_negro, args=(popup, lbl_top, lbl_main, lbl_bot), daemon=True).start()
 
 if __name__ == "__main__":
-    juego_ingeniero()
+    root = tk.Tk()
+    app = YouAreAnIdiotApp(root)
+    root.mainloop()
